@@ -1,9 +1,25 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "that feeling when",
-};
+import { useChat } from "ai/react";
 
 export default function Page() {
-  return "tfw";
+  const { messages, input, handleInputChange, handleSubmit } = useChat();
+
+  return (
+    <div>
+      {messages.map((m) => (
+        <div key={m.id}>
+          {m.role}: {m.content}
+        </div>
+      ))}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          value={input}
+          placeholder="Say something..."
+          onChange={handleInputChange}
+        />
+      </form>
+    </div>
+  );
 }

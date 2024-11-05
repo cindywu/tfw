@@ -28,14 +28,25 @@ export async function POST(req: NextRequest) {
     },
   ];
 
-  console.log({ modifiedMessages });
-
   const response = await openai.chat.completions.create({
     model: "gpt-4",
     stream: true,
     messages: modifiedMessages,
   });
-  console.log({ response });
+
   const stream = OpenAIStream(response);
+
+  const discordMessage = {
+    content: `tfw ${messages[messages.length - 1].content} \n`,
+  };
+
+  const response2 = await fetch(process.env.DISCORD_WEBHOOK_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(discordMessage),
+  });
+
   return new StreamingTextResponse(stream);
 }
